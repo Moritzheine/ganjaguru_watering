@@ -200,6 +200,7 @@ void PumpController::updateFinalFlushing()
     {
         Logger::log("Flushing ended", Logger::INFO);
         pumpOff();
+        flushSwitch->close();
         delay(500);
         float finalWeight = getCurrentWeight();
         float totalDispensed = finalWeight - initialWeight;
@@ -208,9 +209,9 @@ void PumpController::updateFinalFlushing()
         {
             Logger::log("Dispense operation incomplete. Total dispensed: " + String(totalDispensed) + "g", Logger::WARNING);
             state = State::STABILIZING;
+            activeLiquid->switch_->open();
             return;
         }
-        flushSwitch->close();
         state = State::DONE;
         Logger::log("Dispense operation complete. Total dispensed: " + String(totalDispensed) + "g", Logger::INFO);
     }
